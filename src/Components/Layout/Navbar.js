@@ -5,7 +5,7 @@ function Header() {
     <header className="sticky top-0 bg-[#7e2d9b] px-10 backdrop-blur-md text-white z-10">
       <div className="flex justify-between     py-6  items-center">
         <div>
-          <img src={Logo}  alt="Meme Logo" />
+          <img src={Logo} alt="Meme Logo" />
         </div>
         <ul className="flex space-x-8 font-semibold">
           <li>
