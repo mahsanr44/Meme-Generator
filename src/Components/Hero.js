@@ -1,29 +1,36 @@
-import React, { useState } from "react";
-import {MemeData} from "./MemeData";
+import React, { useEffect, useState } from "react";
 import MemeImg from "./../Images/meme.png";
-
 const Hero = () => {
-  const [memeData, setmemeData] = useState({
+  const [meme, setMeme] = useState({
     topText: "Shut up",
-    bottomText: "and take my money",
+    bottomText: "and take your money",
     memeImg: MemeImg,
   });
+  const [allMemes, setAllMemes] = useState([]);
+
+  useEffect(() => {
+    const getMemes = async () => {
+      const res = await fetch("https://api.imgflip.com/get_memes");
+      const data = await res.json();
+      setAllMemes(data.data.memes);
+    };
+    getMemes();
+
+    return () => {};
+  }, []);
 
   const getMemeImage = () => {
-    const memesArray = MemeData.data.memes;
-    const randomNumber = Math.floor(Math.random() * memesArray.length);
-    const memeImgUrl = memesArray[randomNumber].url;
-    // const memeText=memesArray[randomNumber].name
-    setmemeData((prevMeme) => ({
+    const randomNumber = Math.floor(Math.random() * allMemes.length);
+    const memeImgUrl = allMemes[randomNumber].url;
+    setMeme((prevMeme) => ({
       ...prevMeme,
       memeImg: memeImgUrl,
-      // topText:memeText
     }));
   };
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setmemeData((prevMeme) => ({
+    setMeme((prevMeme) => ({
       ...prevMeme,
       [name]: value,
     }));
@@ -34,7 +41,7 @@ const Hero = () => {
       <div className="flex py-8 justify-center ">
         <input
           onChange={handleChange}
-          value={memeData.topText}
+          value={meme.topText}
           placeholder="Shut up"
           name="topText"
           type="text"
@@ -42,7 +49,7 @@ const Hero = () => {
         />
         <input
           onChange={handleChange}
-          value={memeData.bottomText}
+          value={meme.bottomText}
           placeholder="and take my money"
           name="bottomText"
           type="text"
@@ -53,12 +60,12 @@ const Hero = () => {
         <button onClick={getMemeImage}>Get a new meme image 🖼</button>
       </div>
       <div className="flex justify-center py-10">
-        <img src={memeData.memeImg} width={600} alt="Meme" />
+        <img src={meme.memeImg} width={600} alt="Meme" />
         <span className="absolute font-bold text-white text-4xl font-serif mt-2 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-          {memeData.topText}
+          {meme.topText}
         </span>
         <span className="absolute font-bold text-white text-4xl font-serif mt-60 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-          {memeData.bottomText}
+          {meme.bottomText}
         </span>
       </div>
     </div>
